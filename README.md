@@ -1,28 +1,66 @@
-# Medicine Tracker
+# Pillbox
 
-An interactive iPhone-style prototype for tracking daily medicine doses, supply levels and adherence history.
+An iOS medication reminder and supply tracker. Pillbox answers one question
+fast — *what do I take, and when* — and a second one without arithmetic: *what
+runs out first*.
 
-## Features
+## Screens
 
-- **Today** — the day's schedule; tap to mark a dose taken or undo it.
-- **Supply** — per-medicine stock with a per-medicine low-stock warning level, refills and editing.
-- **History** — month calendar (taken / partly / missed), streak and adherence stats, per-medicine filter, month and year pickers, and tap-to-correct dose records.
-- Low-stock push notification when a medicine crosses its own warning threshold.
+- **Today** — the adherence ring, the next dose given emphasis, missed doses and low supply called out separately, then the full day's schedule. Recording a dose is one tap, is confirmed by a toast, and is undoable.
+- **Supply** — every medicine sorted by urgency, showing pills remaining *and* estimated days left, with refill in a sheet that previews the new total before committing.
+- **History** — a month calendar where each day carries a shape as well as a colour, plus a list mode, medicine filter, and per-day dose detail. Changing a past record asks first.
+- **Settings** — notifications, appearance (theme, text size, reduce motion), data and privacy including delete-all, help, legal and the medical disclaimer.
+- **Add medicine** — a four-step sheet (medicine → schedule → reminders → supply) with real time pickers and a live supply estimate.
 
 ## Running it
 
-`index.html` is a single self-contained file. Open it in any modern browser — no build step, no dependencies, no network access required.
+```bash
+open index.html
+```
 
-## Publishing with GitHub Pages
+No build step, no server, no network access. `index.html` carries the token
+layer and component styles; `app.js` is the application. Classic scripts load
+over `file://`, so double-clicking works.
 
-1. Push this folder to a repository.
-2. Settings → Pages → Source: **Deploy from a branch**, branch `main`, folder `/ (root)`.
-3. The app will be served at `https://<user>.github.io/<repo>/`.
+## Design system
 
-## Color system
+`design-system/pillbox/MASTER.md` is the source of truth for the interface —
+philosophy, colour, typography, spacing, radii, shadows, materials, icons,
+components, motion, accessibility and both themes. `design-system/pillbox/pages/`
+holds per-screen rules that may narrow MASTER but never contradict it.
 
-Slate ground (#F8FAFC) with white cards and #E2E8F0 rules. Teal #0F766E carries brand, primary actions and active navigation. Semantic color is reserved: green for taken, blue for upcoming, amber for partly taken, red for missed and errors.
+Nothing in the UI carries a raw hex, font size or duration; every value is a
+token. If a screen needs something MASTER does not define, it goes in MASTER
+first.
 
-## Notes
+The palette keeps Pillbox's `#0F766E` teal as the brand but spends it
+sparingly — active navigation, the one primary action per screen, the next
+dose, progress and selection. Everything else is neutral. Status is never
+carried by colour alone: every state has an icon and a word as well.
 
-Data is in-memory demo state — nothing is persisted between reloads.
+## Checks
+
+```bash
+npm install
+npx playwright install chromium
+npm test
+```
+
+`npm run audit` sweeps every screen in light and dark, at 1× and 2× text, at
+320px and 393px, failing on sub-44pt touch targets, missing accessible names,
+horizontal overflow, or text under its contrast threshold. `npm run flows`
+drives the real interactions end to end. See `test/README.md`.
+
+## Where this is going
+
+This is the reference prototype. The production target is React Native + Expo,
+and MASTER.md §16 lists the component contracts (`MedicationCard`, `DoseRow`,
+`SupplyIndicator`, `StatusBadge`, `ConfirmationSheet`, …) that the port
+implements. The prototype's structure — tokens, then components, then screens —
+mirrors that tree deliberately, so the port is a translation rather than a
+rewrite. The HTML is not intended to be wrapped in a WebView.
+
+## Note
+
+Data lives in memory for the prototype and resets on reload. Pillbox tracks
+medicines you have been prescribed; it does not give medical advice.

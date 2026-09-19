@@ -51,16 +51,19 @@ npm test
 horizontal overflow, or text under its contrast threshold. `npm run flows`
 drives the real interactions end to end. See `test/README.md`.
 
-## Where this is going
+## The iOS app
 
-This is the reference prototype. The production target is React Native + Expo,
-and MASTER.md §16 lists the component contracts (`MedicationCard`, `DoseRow`,
-`SupplyIndicator`, `StatusBadge`, `ConfirmationSheet`, …) that the port
-implements. The prototype's structure — tokens, then components, then screens —
-mirrors that tree deliberately, so the port is a translation rather than a
-rewrite. The HTML is not intended to be wrapped in a WebView.
+`mobile/` holds the React Native + Expo app — the production target. It
+implements the same design system from the same MASTER.md, adding what the
+prototype could only represent: persistence across relaunch, real scheduled
+notifications, a native tab bar and a native time picker. See `mobile/README.md`.
+
+The prototype remains the design reference: it is what the visual decisions were
+verified against, and it runs anywhere with no toolchain. It is not meant to be
+wrapped in a WebView.
 
 ## Note
 
-Data lives in memory for the prototype and resets on reload. Pillbox tracks
-medicines you have been prescribed; it does not give medical advice.
+Prototype data lives in memory and resets on reload; the iOS app persists to the
+device. Pillbox tracks medicines you have been prescribed; it does not give
+medical advice.
